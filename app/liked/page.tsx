@@ -20,7 +20,7 @@ const LikedPage = async () => {
                 fill
                 src={"/images/liked.png"}
                 alt="Playlist"
-                className="object-cover"
+                className="object-cover rounded-md"
               />
             </div>
 

@@ -6,7 +6,10 @@ import { AiOutlinePlus } from "react-icons/ai";
 import useAuthModal from "@/hooks/useAuthModal";
 import { useUser } from "@/hooks/useUser";
 import useUploadModal from "@/hooks/useUploadModal";
+import useOnPlay from "@/hooks/useOnPlay";
+
 import { Song } from "@/types";
+
 import MediaItem from "./MediaItem";
 
 interface LibraryProps {
@@ -17,6 +20,8 @@ const Library: React.FC<LibraryProps> = ({ songs }) => {
   const authModal = useAuthModal();
   const uploadModal = useUploadModal();
   const { user } = useUser();
+
+  const onPlay = useOnPlay(songs);
 
   const onClick = () => {
     if (!user) {
@@ -44,7 +49,11 @@ const Library: React.FC<LibraryProps> = ({ songs }) => {
 
       <div className="flex flex-col gap-y-2 mt-4 px-3">
         {songs.map((song, index) => (
-          <MediaItem key={index} onClick={() => {}} data={song} />
+          <MediaItem
+            key={index}
+            onClick={(id: string) => onPlay(id)}
+            data={song}
+          />
         ))}
       </div>
     </div>
