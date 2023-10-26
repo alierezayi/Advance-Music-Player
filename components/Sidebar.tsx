@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 
-import { Song } from "@/types";
+import { Song } from "@/libs/types";
 
 import { HiHome } from "react-icons/hi";
 import { BiSearch } from "react-icons/bi";

@@ -6,7 +6,7 @@ import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
 import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 
-import { Song } from "@/types";
+import { Song } from "@/libs/types";
 import usePlayer from "@/hooks/usePlayer";
 
 import LikedButton from "./LikedButton";

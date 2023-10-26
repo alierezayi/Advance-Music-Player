@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import { Song } from "@/types";
+import { Song } from "@/libs/types";
 
 import useLoadImage from "@/hooks/useLoadImage";
 

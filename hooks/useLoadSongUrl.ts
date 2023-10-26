@@ -1,4 +1,4 @@
-import { Song } from "@/types";
+import { Song } from "@/libs/types";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const useLoadSongUrl = async (song: Song) => {

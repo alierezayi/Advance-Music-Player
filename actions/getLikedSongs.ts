@@ -1,4 +1,4 @@
-import { Song } from "@/types";
+import { Song } from "@/libs/types";
 
 import { cookies } from "next/headers";
 

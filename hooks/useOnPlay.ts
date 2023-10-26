@@ -1,4 +1,4 @@
-import { Song } from "@/types";
+import { Song } from "@/libs/types";
 
 import usePlayer from "./usePlayer";
 import useAuthModal from "./useAuthModal";
