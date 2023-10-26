@@ -9,13 +9,13 @@ import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 import { Song } from "@/libs/types";
 import usePlayer from "@/hooks/usePlayer";
 
-import LikedButton from "./LikedButton";
 import MediaItem from "./MediaItem";
 import Slider from "./Slider";
+import LikedButton from "./LikedButton";
 
 interface PlayerContentProps {
   song: Song;
-  songUrl: string;
+  songUrl: string | any;
 }
 
 const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
