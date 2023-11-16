@@ -1,18 +1,17 @@
-import { Song } from "@/libs/types";
-
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Song } from "@/libs/types";
+
 import getSongs from "./getSongs";
 
 const getSongsByTitle = async (title: string): Promise<Song[]> => {
   const supabase = createServerComponentClient({
-    cookies,
+    cookies: cookies,
   });
 
   if (!title) {
     const allSongs = await getSongs();
-
     return allSongs;
   }
 
@@ -23,7 +22,7 @@ const getSongsByTitle = async (title: string): Promise<Song[]> => {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.log(error);
+    console.log(error.message);
   }
 
   return (data as any) || [];

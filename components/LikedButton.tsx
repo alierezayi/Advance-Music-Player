@@ -1,28 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 import { useSessionContext } from "@supabase/auth-helpers-react";
-import toast from "react-hot-toast";
 
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-
-import useAuthModal from "@/hooks/useAuthModal";
 import { useUser } from "@/hooks/useUser";
+import useAuthModal from "@/hooks/useAuthModal";
 
-interface LikedButtonProps {
+interface LikeButtonProps {
   songId: string;
 }
 
-const LikedButton: React.FC<LikedButtonProps> = ({ songId }) => {
+const LikeButton: React.FC<LikeButtonProps> = ({ songId }) => {
   const router = useRouter();
-
   const { supabaseClient } = useSessionContext();
-
   const authModal = useAuthModal();
   const { user } = useUser();
 
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
 
   useEffect(() => {
     if (!user?.id) {
@@ -43,7 +40,9 @@ const LikedButton: React.FC<LikedButtonProps> = ({ songId }) => {
     };
 
     fetchData();
-  }, [user?.id, songId, supabaseClient]);
+  }, [songId, supabaseClient, user?.id]);
+
+  const Icon = isLiked ? AiFillHeart : AiOutlineHeart;
 
   const handleLike = async () => {
     if (!user) {
@@ -72,20 +71,25 @@ const LikedButton: React.FC<LikedButtonProps> = ({ songId }) => {
         toast.error(error.message);
       } else {
         setIsLiked(true);
-        toast.success("Liked!");
+        toast.success("Success");
       }
     }
 
     router.refresh();
   };
 
-  const Icon = isLiked ? AiFillHeart : AiOutlineHeart;
-
   return (
-    <button className="hover:opacity-75 transition" onClick={handleLike}>
+    <button
+      className="
+        cursor-pointer 
+        hover:opacity-75 
+        transition
+      "
+      onClick={handleLike}
+    >
       <Icon color={isLiked ? "#22c55e" : "white"} size={25} />
     </button>
   );
 };
 
-export default LikedButton;
+export default LikeButton;

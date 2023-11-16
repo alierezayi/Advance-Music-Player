@@ -1,8 +1,9 @@
 "use client";
 
-import useGetSongById from "@/hooks/useGetSongById";
-import useLoadSongUrl from "@/hooks/useLoadSongUrl";
 import usePlayer from "@/hooks/usePlayer";
+import useLoadSongUrl from "@/hooks/useLoadSongUrl";
+import useGetSongById from "@/hooks/useGetSongById";
+
 import PlayerContent from "./PlayerContent";
 
 const Player = () => {

@@ -13,6 +13,7 @@ declare module "use-sound" {
     () => void,
     {
       loading: boolean;
+      seek: any;
       pause: () => void;
       sound: Howl;
     }

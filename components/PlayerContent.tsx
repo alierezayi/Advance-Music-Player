@@ -1,10 +1,11 @@
 "use client";
 
 import useSound from "use-sound";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
-import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
+import { FaForwardStep, FaBackwardStep } from "react-icons/fa6";
+
 
 import { Song } from "@/libs/types";
 import usePlayer from "@/hooks/usePlayer";
@@ -21,7 +22,11 @@ interface PlayerContentProps {
 const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   const player = usePlayer();
   const [volume, setVolume] = useState(1);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [position, setPosition] = useState(0);
+
+  console.log(position);
+  
 
   const Icon = isPlaying ? BsPauseFill : BsPlayFill;
   const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
@@ -56,7 +61,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     player.setId(previousSong);
   };
 
-  const [play, { pause, sound }] = useSound(songUrl, {
+  const [play, { pause, sound, loading, seek }] = useSound(songUrl, {
     volume: volume,
     onplay: () => setIsPlaying(true),
     onend: () => {
@@ -66,6 +71,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     onpause: () => setIsPlaying(false),
     format: ["mp3"],
   });
+  console.log(sound);
+
+  console.log(seek);
 
   useEffect(() => {
     sound?.play();
@@ -78,8 +86,10 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   const handlePlay = () => {
     if (!isPlaying) {
       play();
+      setIsPlaying(true);
     } else {
       pause();
+      setIsPlaying(false);
     }
   };
 
@@ -89,6 +99,17 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     } else {
       setVolume(0);
     }
+  };
+
+  const handleSliderChange = (e: any) => {
+    const newPosition = parseFloat(e.target.value);
+    setPosition(newPosition);
+  };
+
+  const handleSliderClick = (e: any) => {
+    const newPosition =
+      (e.nativeEvent.offsetX / e.target.offsetWidth) * sound.duration;
+    setPosition(newPosition);
   };
 
   return (
@@ -140,9 +161,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
             gap-x-6
           "
       >
-        <AiFillStepBackward
+        <FaBackwardStep
           onClick={onPlayPrevious}
-          size={30}
+          size={25}
           className="
               text-neutral-400 
               cursor-pointer 
@@ -156,8 +177,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
               flex 
               items-center 
               justify-center
-              h-10
-              w-10 
+              h-12
+              w-12
               rounded-full 
               bg-white 
               p-1 
@@ -166,9 +187,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
         >
           <Icon size={30} className="text-black" />
         </div>
-        <AiFillStepForward
+        <FaForwardStep
           onClick={onPlayNext}
-          size={30}
+          size={25}
           className="
               text-neutral-400 
               cursor-pointer 
@@ -188,6 +209,18 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
           <Slider value={volume} onChange={(value) => setVolume(value)} />
         </div>
       </div>
+
+      {/* <div className="hidden md:flex w-full justify-end pr-2 items-center">
+        <input
+          type="range"
+          min={0}
+          max={sound ? sound.duration : 0}
+          step={1}
+          value={position}
+          onChange={handleSliderChange}
+          onClick={handleSliderClick}
+        />
+      </div> */}
     </div>
   );
 };
