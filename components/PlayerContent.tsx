@@ -80,8 +80,6 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     format: ["mp3"],
   });
 
-  console.log(sound.duration());
-
   useEffect(() => {
     sound?.play();
 
