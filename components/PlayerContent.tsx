@@ -1,32 +1,39 @@
 "use client";
 
 import useSound from "use-sound";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
 import { FaForwardStep, FaBackwardStep } from "react-icons/fa6";
 
-
 import { Song } from "@/libs/types";
 import usePlayer from "@/hooks/usePlayer";
+import useOpenPlayerContent from "@/hooks/useOpenPlayerContent";
+import useLoadImage from "@/hooks/useLoadImage";
 
 import MediaItem from "./MediaItem";
-import Slider from "./Slider";
+import VolumeSlider from "./VolumeSlider";
 import LikedButton from "./LikedButton";
+
+import { IoIosArrowDown } from "react-icons/io";
+import DurationSlider from "./DurationSlider";
 
 interface PlayerContentProps {
   song: Song;
-  songUrl: string | any;
+  songUrl: string;
 }
 
 const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   const player = usePlayer();
-  const [volume, setVolume] = useState(1);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [position, setPosition] = useState(0);
 
-  console.log(position);
-  
+  const { open, onOpen, onClose } = useOpenPlayerContent();
+
+  const imageUrl = useLoadImage(song);
+
+  const [volume, setVolume] = useState(1);
+  const [seek, setSeek] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   const Icon = isPlaying ? BsPauseFill : BsPlayFill;
   const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
@@ -52,6 +59,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     }
 
     const currentIndex = player.ids.findIndex((id) => id === player.activeId);
+
     const previousSong = player.ids[currentIndex - 1];
 
     if (!previousSong) {
@@ -61,8 +69,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     player.setId(previousSong);
   };
 
-  const [play, { pause, sound, loading, seek }] = useSound(songUrl, {
-    volume: volume,
+  const [play, { pause, sound }] = useSound(songUrl, {
+    volume,
     onplay: () => setIsPlaying(true),
     onend: () => {
       setIsPlaying(false);
@@ -71,9 +79,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     onpause: () => setIsPlaying(false),
     format: ["mp3"],
   });
-  console.log(sound);
 
-  console.log(seek);
+  console.log(sound.duration());
 
   useEffect(() => {
     sound?.play();
@@ -101,22 +108,105 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     }
   };
 
-  const handleSliderChange = (e: any) => {
-    const newPosition = parseFloat(e.target.value);
-    setPosition(newPosition);
-  };
+  if (open) {
+    return (
+      <div className="relative flex flex-col items-center justify-between h-full py-20 md:py-10 px-2">
+        <button onClick={onClose} className="absolute top-3 right-3">
+          <IoIosArrowDown size={25} />
+        </button>
 
-  const handleSliderClick = (e: any) => {
-    const newPosition =
-      (e.nativeEvent.offsetX / e.target.offsetWidth) * sound.duration;
-    setPosition(newPosition);
-  };
+        <div className="flex flex-col items-center gap-10">
+          <div className="relative w-56 h-56 lg:w-64 lg:h-64 rounded-md">
+            <Image
+              fill
+              src={imageUrl || "/images/music-placeholder.png"}
+              alt="Playlist"
+              className="object-cover rounded-md"
+            />
+          </div>
+
+          <div className="flex flex-col items-center gap-1">
+            <p className="text-lg">{song.title}</p>
+            <p className="text-neutral-400 text-sm">{song.author}</p>
+          </div>
+        </div>
+
+        <div className="w-full max-w-2xl flex flex-col gap-7">
+          <div>
+            <DurationSlider value={seek} onChange={(value) => setSeek(value)} />
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-neutral-400">0:00</span>
+              <span className="text-sm text-neutral-400">3:56</span>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between flex-1 w-full">
+            <VolumeIcon
+              onClick={toggleMute}
+              className="cursor-pointer"
+              size={25}
+            />
+
+            <div
+              className="
+                  h-full
+                  flex 
+                  justify-center 
+                  items-center 
+                  gap-x-7
+                  sm:gap-x-10
+                "
+            >
+              <FaBackwardStep
+                onClick={onPlayPrevious}
+                size={25}
+                className="
+                    text-neutral-400 
+                    cursor-pointer 
+                    hover:text-white 
+                    transition
+                  "
+              />
+              <div
+                onClick={handlePlay}
+                className="
+                    flex 
+                    items-center 
+                    justify-center
+                    h-12
+                    w-12
+                    rounded-full 
+                    bg-white 
+                    p-1 
+                    cursor-pointer
+                  "
+              >
+                <Icon size={30} className="text-black" />
+              </div>
+              <FaForwardStep
+                onClick={onPlayNext}
+                size={25}
+                className="
+                    text-neutral-400 
+                    cursor-pointer 
+                    hover:text-white 
+                    transition
+                  "
+              />
+            </div>
+
+            <LikedButton songId={song.id} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 h-full">
       <div className="flex w-full justify-start">
         <div className="flex items-center gap-x-4">
-          <MediaItem data={song} />
+          <MediaItem data={song} onClick={onOpen} />
           <LikedButton songId={song.id} />
         </div>
       </div>
@@ -128,7 +218,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
             col-auto 
             w-full 
             justify-end 
-            items-center
+            items-center 
+            pr-2
           "
       >
         <div
@@ -158,7 +249,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
             items-center 
             w-full 
             max-w-[722px] 
-            gap-x-6
+            gap-x-10
           "
       >
         <FaBackwardStep
@@ -206,21 +297,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
             className="cursor-pointer"
             size={34}
           />
-          <Slider value={volume} onChange={(value) => setVolume(value)} />
+          <VolumeSlider value={volume} onChange={(value) => setVolume(value)} />
         </div>
       </div>
-
-      {/* <div className="hidden md:flex w-full justify-end pr-2 items-center">
-        <input
-          type="range"
-          min={0}
-          max={sound ? sound.duration : 0}
-          step={1}
-          value={position}
-          onChange={handleSliderChange}
-          onClick={handleSliderClick}
-        />
-      </div> */}
     </div>
   );
 };

@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children, songs }) => {
         player.activeId && `h-[calc(100%-80px)]`
       )}
     >
-      <div className="hidden md:flex flex-col gap-y-2 bg-black h-full w-[300px] p-2">
+      <div className="hidden md:flex flex-col gap-y-2 bg-black h-full w-[300px] py-2 pr-2">
         <Box>
           <div className="flex flex-col gap-y-4 px-5 py-4">
             {routes.map((item) => (
@@ -63,7 +63,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children, songs }) => {
         </Box>
       </div>
 
-      <main className="h-full flex-1 overflow-y-auto py-2">{children}</main>
+      <main className="h-full flex-1 overflow-y-auto pb-1 md:py-2">{children}</main>
     </div>
   );
 };

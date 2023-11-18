@@ -4,6 +4,7 @@ declare module "use-sound" {
     options?: {
       soundEnabled?: boolean;
       volume?: number;
+      seek?: any;
       onplay?: () => void;
       onend?: () => void;
       onpause?: () => void;
@@ -19,31 +20,3 @@ declare module "use-sound" {
     }
   ];
 }
-
-// declare module "use-sound" {
-//   const useSound: any; // Replace 'any' with the actual type if you can infer it
-//   export default useSound;
-// }
-
-// declare module "use-sound" {
-//   type UseSoundOptions = {
-//     volume?: number;
-//     onplay?: () => void;
-//     onend?: () => void;
-//     onpause?: () => void;
-//     format?: string[];
-//   };
-
-//   type UseSoundReturn = [
-//     () => void, // play function
-//     {
-//       pause: () => void;
-//       sound: Howl; // Assuming 'Howl' is the type for sound from the package
-//     }
-//   ];
-
-//   export function useSound(
-//     url: string,
-//     options?: UseSoundOptions
-//   ): UseSoundReturn;
-// }

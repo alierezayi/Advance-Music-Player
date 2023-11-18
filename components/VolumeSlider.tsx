@@ -7,7 +7,7 @@ interface SliderProps {
   onChange?: (value: number) => void;
 }
 
-const Slider: React.FC<SliderProps> = ({ value = 1, onChange }) => {
+const VolumeSlider: React.FC<SliderProps> = ({ value = 1, onChange }) => {
   const handleChange = (newValue: number[]) => {
     onChange?.(newValue[0]);
   };
@@ -28,4 +28,4 @@ const Slider: React.FC<SliderProps> = ({ value = 1, onChange }) => {
   );
 };
 
-export default Slider;
+export default VolumeSlider;

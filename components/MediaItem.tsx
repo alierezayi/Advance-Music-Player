@@ -37,6 +37,8 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
         w-full 
         p-2 
         rounded-md
+        min-w-[150px]
+        md:min-w-[200px]
       "
     >
       <div
